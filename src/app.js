@@ -28,7 +28,7 @@ app.post("/items", (req, res) =>{
 })
 
 app.get("/items", (req, res)=>{
-    const {tipo} = req.query
+    const {tipo} = req.query;
     console.log(req.query)
     if (tipo){
         const itemsFiltados = lista.filter(item =>{
