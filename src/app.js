@@ -1,5 +1,6 @@
 import express, { json } from "express"
 import cors from "cors"
+import status from "http-status";
 
 const app = express();
 app.use(cors());
@@ -10,11 +11,11 @@ const lista = [];
 app.post("/items", (req, res) =>{
     const body = req.body;
     if (!body.name ||  !body.quantity || !body.type){
-        return res.sendStatus(422)
+        return res.sendStatus(status.UNPROCESSABLE_ENTITY)
     }
     lista.map(item => {
-        if (item.name === body.name){
-            return res.sendStatus(409)
+        if (item.name.toLowerCase() === body.name.toLowerCase()){
+            return res.sendStatus(status.CONFLICT)
         }
     })
     const novoItem={
@@ -24,7 +25,7 @@ app.post("/items", (req, res) =>{
         type:body.type
     }
     lista.push(novoItem)
-    return res.sendStatus(201)
+    return res.sendStatus(status.CREATED)
 })
 
 app.get("/items", (req, res)=>{
@@ -37,6 +38,18 @@ app.get("/items", (req, res)=>{
         return res.send(itemsFiltados)   
     }
     return res.send(lista)
+})
+
+app.get("/items/:id",(req, res)=>{
+    const {id} = req.params;
+    if (id<0  || !Number.isInteger(Number(id))){
+        return res.sendStatus(status.BAD_REQUEST);
+    }
+    const itemFiltradoID = lista.find(item => id == item.id);
+    if (!itemFiltradoID){
+        return res.sendStatus(status.NOT_FOUND);
+    }
+    return res.send(itemFiltradoID);
 })
 
 
