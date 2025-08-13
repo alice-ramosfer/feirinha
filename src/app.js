@@ -29,11 +29,11 @@ app.post("/items", (req, res) =>{
 })
 
 app.get("/items", (req, res)=>{
-    const {tipo} = req.query;
+    const {type} = req.query;
     console.log(req.query)
-    if (tipo){
+    if (type){
         const itemsFiltados = lista.filter(item =>{
-            return item.type.toLowerCase().includes(tipo.toLowerCase())
+            return item.type.toLowerCase().includes(type.toLowerCase())
         })
         return res.send(itemsFiltados)   
     }
